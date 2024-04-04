@@ -1,0 +1,512 @@
+import pandas as pd
+import streamlit as st
+import plotly.graph_objects as go
+import seaborn as sns
+import matplotlib.pyplot as plt
+import plotly.express as px
+import geopandas as gpd
+import mapclassify
+import numpy as np
+import statsmodels.api as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+# Wczytanie danych
+
+@st.cache_data
+def load_data():
+    df = pd.read_csv(r'C:\Users\aczad\Desktop\studia\agh studia magisterskie geoinformatyka\Pozostałe\Praktyki uczenia maszynowego\Ćwiczenia\EDA z uwzględnieniem czynnika przestrzennego\dane.csv', header=0, sep=';')
+
+    # Zmiana na liczby
+    df['Status'] = pd.to_numeric(df['Status'], errors='coerce')
+    df['Status'] = df['Status'].dropna().astype(int)
+    df.set_index(df.columns[0], inplace=True)
+
+    return df
+
+# Tabela ze wszystkimi danymi
+
+def basic_stats(data):
+    st.subheader("Tabela ze wszystkimi danymi")
+    st.dataframe(data)
+
+
+# Wykres 1
+
+def plot_countries_1(data):
+    st.subheader("Wykres punktowy wybranego zanieczyszczenia w wybranych krajach")
+
+    unique_columns = data.columns.tolist()
+
+    unique_rows = sorted(data.iloc[:, 1].unique().tolist())
+    selected_countries = st.multiselect("Wybierz kraje:", unique_rows, key="time_series_countries")
+
+    column_choice = st.selectbox("Wybierz zanieczyszczenie:", unique_columns[8:11])
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 1].isin(selected_countries)]
+    x_data = filtered_data.iloc[:, 3]  # Oś x
+
+    filtered_data[column_choice] = filtered_data[column_choice].str.replace(',', '.').astype(float)
+
+
+    # Wykres
+    fig = go.Figure()
+    for i, country in enumerate(selected_countries):
+        selected_column_data = filtered_data.loc[filtered_data.iloc[:, 1] == country, column_choice]
+        marker_size = 20 - i * 5  # Zmniejszanie rozmiaru punktów
+        fig.add_trace(go.Scatter(x=x_data, y=selected_column_data, mode='markers',
+                                 name=country, line=dict(),
+                                 marker=dict(size=marker_size)))  # Rozmiar punktów
+    fig.update_layout(title=f"Wykres dla: {column_choice}", xaxis_title='Lata', yaxis_title=f"{column_choice} (µg/m3)")
+
+    # Wyświetlenie wykresu
+    st.plotly_chart(fig)
+
+# Wykres 2
+
+def plot_countries_2(data):
+    st.subheader("Wykres punktowy wybranych zanieczyszczeń w wybranym kraju")
+
+    unique_columns = data.columns.tolist()
+
+
+    selected_columns = st.multiselect("Wybierz kraj:", unique_columns[8:11])
+    selected_row = st.selectbox("Wybierz zanieczyszczenia:", sorted(data.iloc[:, 1].unique()))
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 1] == selected_row]
+
+    x_data = filtered_data.iloc[:, 3]  # Oś x
+
+
+    # Wykres
+    fig = go.Figure()
+    colors = ['blue', 'red', 'green', 'orange', 'purple']
+
+    for i, column_choice in enumerate(reversed(selected_columns)):
+        marker_size = 20 - i * 5
+        fig.add_trace(go.Scatter(x=x_data, y=filtered_data[column_choice].str.replace(',', '.').astype(float), mode='markers',
+                                 name=column_choice, line=dict(color=colors[i]),
+                                 marker=dict(size=marker_size)))
+    fig.update_layout(title=f"Wykres dla: {selected_row}",
+                      xaxis_title='Lata', yaxis_title= "µg/m3")
+
+
+    # Wyświetlenie wykresu
+    st.plotly_chart(fig)
+
+# Wykres 3 WHO region
+
+def plot_WHO_region_1(data):
+    st.subheader("Wykres punktowy wybranego zanieczyszczenia w wybranych regionach")
+
+    unique_columns = data.columns.tolist()
+
+    unique_rows = data.iloc[:, 0].unique().tolist()
+    selected_countries = st.multiselect("Wybierz regiony:", unique_rows, key="time_series_countries")
+
+    column_choice = st.selectbox("Wybierz zanieczyszczenie:", unique_columns[8:11])
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 0].isin(selected_countries)]
+    x_data = filtered_data.iloc[:, 3]  # Oś x
+
+    filtered_data[column_choice] = filtered_data[column_choice].str.replace(',', '.').astype(float)
+
+    # Tworzenie wykresu
+    fig = go.Figure()
+    for i, country in enumerate(selected_countries):
+        selected_column_data = filtered_data.loc[filtered_data.iloc[:, 0] == country, column_choice]
+        marker_size = 20 - i * 5
+        fig.add_trace(go.Scatter(x=x_data, y=selected_column_data, mode='markers',
+                                 name=country, line=dict(),
+                                 marker=dict(size=marker_size)))
+    fig.update_layout(title=f"Wykres dla: {column_choice}", xaxis_title='Lata', yaxis_title=f"{column_choice} (µg/m3)")
+
+    # Wyświetlenie wykresu
+    st.plotly_chart(fig)
+
+# Wykres 4 WHO region
+
+def plot_WHO_region_2(data):
+    st.subheader("Wykres punktowy wybranych zanieczyszczeń w wybranym regionie")
+
+    unique_columns = data.columns.tolist()
+
+
+    selected_columns = st.multiselect("Wybierz region:", unique_columns[8:11])
+    selected_row = st.selectbox("Wybierz zanieczyszczenia:", data.iloc[:, 0].unique())
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 0] == selected_row]
+
+    x_data = filtered_data.iloc[:, 3]  # Oś x
+
+
+    # Wykres
+    fig = go.Figure()
+    colors = ['blue', 'red', 'green', 'orange', 'purple']
+
+    for i, column_choice in enumerate(reversed(selected_columns)):
+        marker_size = 20 - i * 5
+        fig.add_trace(go.Scatter(x=x_data, y=filtered_data[column_choice].str.replace(',', '.').astype(float), mode='markers',
+                                 name=column_choice, line=dict(color=colors[i]),
+                                 marker=dict(size=marker_size)))
+    fig.update_layout(title=f"Wykres dla: {selected_row}",
+                      xaxis_title='Lata', yaxis_title= "µg/m3")
+
+    # Wyświetlenie wykresu
+    st.plotly_chart(fig)
+
+# Wykres 5 miasta
+
+def plot_cities_1(data):
+    st.subheader("Wykres punktowy wybranego zanieczyszczenia w wybranych miastach")
+
+    unique_columns = data.columns.tolist()
+
+    unique_rows = sorted(data.iloc[:, 2].dropna().unique().tolist())
+    selected_countries = st.multiselect("Wybierz miasta:", unique_rows, key="time_series_countries")
+
+    column_choice = st.selectbox("Wybierz zanieczyszczenie:", unique_columns[8:11])
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 2].isin(selected_countries)]
+    x_data = filtered_data.iloc[:, 3]  # Oś x
+
+    filtered_data[column_choice] = filtered_data[column_choice].str.replace(',', '.').astype(float)
+
+    # Wykres
+    fig = go.Figure()
+    for i, country in enumerate(selected_countries):
+        selected_column_data = filtered_data.loc[filtered_data.iloc[:, 2] == country, column_choice]
+        marker_size = 20 - i * 5
+        fig.add_trace(go.Scatter(x=x_data, y=selected_column_data, mode='markers',
+                                 name=country, line=dict(),
+                                 marker=dict(size=marker_size)))
+    fig.update_layout(title=f"Wykres dla: {column_choice}", xaxis_title='Lata', yaxis_title=f"{column_choice} (µg/m3)")
+
+    # Wyświetlenie wykresu
+    st.plotly_chart(fig)
+
+# Wykres 6 miasta
+
+def plot_cities_2(data):
+    st.subheader("Wykres punktowy wybranych zanieczyszczeń w wybranym mieście")
+
+    unique_columns = data.columns.tolist()
+
+
+    selected_columns = st.multiselect("Wybierz miasto:", unique_columns[8:11])
+    selected_row = st.selectbox("Wybierz zanieczyszczenia:", sorted(data.iloc[:, 2].unique()))
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 2] == selected_row]
+
+    x_data = filtered_data.iloc[:, 3]  # Oś x
+
+
+    # Wykres
+    fig = go.Figure()
+    colors = ['blue', 'red', 'green', 'orange', 'purple']
+
+    for i, column_choice in enumerate(reversed(selected_columns)):
+        marker_size = 20 - i * 5
+        fig.add_trace(go.Scatter(x=x_data, y=filtered_data[column_choice].str.replace(',', '.').astype(float), mode='markers',
+                                 name=column_choice, line=dict(color=colors[i]),
+                                 marker=dict(size=marker_size)))
+    fig.update_layout(title=f"Wykres dla: {selected_row}",
+                      xaxis_title='Lata', yaxis_title= "µg/m3")
+
+    # Wyświetlenie wykresu
+    st.plotly_chart(fig)
+
+# Boxplot dla państw
+
+# Zmienna globalna
+boxplot_index = 0
+
+def boxplot_countries(data):
+    global boxplot_index
+    st.subheader("Boxplot dla wybranego państwa i wybranego zanieczyszczenia")
+
+    # Ustawienie wyborów
+    unique_columns = data.columns.tolist()
+    unique_rows = sorted(data.iloc[:, 1].unique().tolist())
+
+    selected_column = st.selectbox("Wybierz zanieczyszczenie:", unique_columns[8:11], key=f"boxplot_column_{boxplot_index}")
+    selected_row = st.selectbox("Wybierz państwo:", unique_rows, key=f"boxplot_row_{boxplot_index}")
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 1] == selected_row]
+
+    # Boxplot
+    fig = go.Figure()
+    for column_choice in [selected_column]:
+        fig.add_trace(go.Box(y=filtered_data[column_choice].str.replace(',', '.').astype(float), name=column_choice))
+
+    fig.update_layout(title=f"Boxplot dla: {selected_column} i {selected_row}",
+                      xaxis_title='', yaxis_title=f"{selected_column} (µg/m3)")
+
+    # Dodanie punktów
+    # Filtrowanie danych
+    swarm_data = filtered_data[[selected_column, unique_columns[5], unique_columns[6], unique_columns[7]]]
+    swarm_data[selected_column] = swarm_data[selected_column].str.replace(',', '.').astype(float)
+    swarm_data = swarm_data.melt(id_vars=unique_columns[5:8], value_vars=[selected_column])
+
+    # Dodanie punktów
+    fig_swarm = px.scatter(swarm_data, x=swarm_data['variable'], y=swarm_data['value'], color=swarm_data['variable'])
+    fig_swarm.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
+
+    # Złączenie
+    for trace in fig_swarm.data:
+        fig.add_trace(trace)
+
+    # Wyświetlenie wykresów
+    st.plotly_chart(fig)
+
+    boxplot_index += 1
+
+# Boxplot dla regionów
+
+# Zmienna globalna
+boxplot_index = 0
+
+def boxplot_WHO_region(data):
+    global boxplot_index
+    st.subheader("Boxplot dla wybranego regionu")
+
+    unique_columns = data.columns.tolist()
+
+    # Ustawienie wyborów
+    unique_rows = sorted(data.iloc[:, 0].astype(str).unique().tolist())
+
+    selected_column = st.selectbox("Wybierz zanieczyszczenie:", unique_columns[8:11], key=f"boxplot_column_{boxplot_index}")
+    selected_row = st.selectbox("Wybierz region:", unique_rows, key=f"boxplot_row_{boxplot_index}")
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 0].astype(str) == selected_row]
+
+    # Boxplot
+    fig = go.Figure()
+    for column_choice in [selected_column]:
+        fig.add_trace(go.Box(y=filtered_data[column_choice].str.replace(',', '.').astype(float), name=column_choice))
+
+    fig.update_layout(title=f"Boxplot dla: {selected_column} i {selected_row}",
+                      xaxis_title='', yaxis_title=f"{selected_column} (µg/m3)")
+
+    # Dodanie punktów
+    # Filtrowanie danych
+    swarm_data = filtered_data[[selected_column, unique_columns[5], unique_columns[6], unique_columns[7]]]
+    swarm_data[selected_column] = swarm_data[selected_column].str.replace(',', '.').astype(float)
+    swarm_data = swarm_data.melt(id_vars=unique_columns[5:8], value_vars=[selected_column])
+
+    # Dodanie punktów
+    fig_swarm = px.scatter(swarm_data, x=swarm_data['variable'], y=swarm_data['value'], color=swarm_data['variable'])
+    fig_swarm.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
+
+    # Złączenie
+    for trace in fig_swarm.data:
+        fig.add_trace(trace)
+
+    # Wyświetlenie wykresów
+    st.plotly_chart(fig)
+
+    boxplot_index += 1
+
+
+# Boxplot dla miast
+
+# Zmienna globalna
+boxplot_index = 0
+
+def boxplot_cities(data):
+    global boxplot_index
+    st.subheader("Boxplot dla wybranego miasta")
+
+    unique_columns = data.columns.tolist()
+
+    # Ustawienie wyborów
+    unique_rows = sorted(data.iloc[:, 2].astype(str).unique().tolist())
+
+    selected_column = st.selectbox("Wybierz zanieczyszczenie:", unique_columns[8:11], key=f"boxplot_column_{boxplot_index}")
+    selected_row = st.selectbox("Wybierz miasto:", unique_rows, key=f"boxplot_row_{boxplot_index}")
+
+    # Filtrowanie danych
+    filtered_data = data[data.iloc[:, 2].astype(str) == selected_row]
+
+    # Boxplot
+    fig = go.Figure()
+    for column_choice in [selected_column]:
+        fig.add_trace(go.Box(y=filtered_data[column_choice].str.replace(',', '.').astype(float), name=column_choice))
+
+    fig.update_layout(title=f"Boxplot dla: {selected_column} i {selected_row}",
+                      xaxis_title='', yaxis_title=f"{selected_column} (µg/m3)")
+
+    # Dodanie punktów
+    # Filtrowanie danych
+    swarm_data = filtered_data[[selected_column, unique_columns[5], unique_columns[6], unique_columns[7]]]
+    swarm_data[selected_column] = swarm_data[selected_column].str.replace(',', '.').astype(float)
+    swarm_data = swarm_data.melt(id_vars=unique_columns[5:8], value_vars=[selected_column])
+
+    # Dodanie punktów
+    fig_swarm = px.scatter(swarm_data, x=swarm_data['variable'], y=swarm_data['value'], color=swarm_data['variable'])
+    fig_swarm.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
+
+    # Złączenie
+    for trace in fig_swarm.data:
+        fig.add_trace(trace)
+
+    # Wyświetlenie wykresów
+    st.plotly_chart(fig)
+
+    boxplot_index += 1
+
+# Mapa 1
+
+def map_2(data, shapefile):
+    st.subheader("Sprawdź konkretny kraj")
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+
+    excel = pd.read_csv(r'C:\Users\aczad\Desktop\studia\agh studia magisterskie geoinformatyka\Pozostałe\Praktyki uczenia maszynowego\Ćwiczenia\EDA z uwzględnieniem czynnika przestrzennego\dane_mapa2.csv', header=0, sep=';')
+
+    shapefile_path = r'C:\Users\aczad\Desktop\studia\agh studia magisterskie geoinformatyka\Pozostałe\Praktyki uczenia maszynowego\Ćwiczenia\EDA z uwzględnieniem czynnika przestrzennego\swiat_shapefile\swiat.shp'  # Podaj ścieżkę do pliku shapefile
+    shapefile = gpd.read_file(shapefile_path)
+
+    # Ustawienie wyborów
+
+    unique_values = sorted(excel.iloc[:, 1].dropna().unique())
+    selected_row = st.selectbox("Wybierz kraj:", unique_values)
+
+    selected_column = st.selectbox("Wybierz zanieczyszczenie:", excel.columns[5:8], key='map2')
+
+    filtered_data = excel[excel.iloc[:, 1] == selected_row]
+
+    # Zmienna gdf_merged
+    gdf_merged = None
+
+    # Sprawdzenie, czy są dane do wyświetlenia
+    if not filtered_data.empty:
+        # Sprawdzenie, czy kolumna zawiera wartości
+        if filtered_data[selected_column].notnull().any():
+            # Łączenie danych po kolumnie ISO3_CODE
+            gdf_merged = shapefile.merge(filtered_data, on="ISO3_CODE")
+
+    if gdf_merged is not None:
+        # Wyświetlenie mapy
+        fig, ax = plt.subplots()
+        gdf_merged.plot(column=selected_column, cmap='gray', legend=True, ax=ax)
+        plt.title(f"Mapa {selected_column} (średnia roczna wartość)")
+        st.pyplot(fig)
+    else:
+        st.write("Brak danych")
+
+# Mapa 2
+
+def map(data, shapefile):
+    st.subheader("Średnie roczne stężenie wybranych substancji dla 2019 r.")
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+
+    excel = pd.read_csv(r'C:\Users\aczad\Desktop\studia\agh studia magisterskie geoinformatyka\Pozostałe\Praktyki uczenia maszynowego\Ćwiczenia\EDA z uwzględnieniem czynnika przestrzennego\dane_mapa2.csv', header=0, sep=';')
+
+    shapefile_path = r'C:\Users\aczad\Desktop\studia\agh studia magisterskie geoinformatyka\Pozostałe\Praktyki uczenia maszynowego\Ćwiczenia\EDA z uwzględnieniem czynnika przestrzennego\swiat_shapefile\swiat.shp'  # Podaj ścieżkę do pliku shapefile
+    shapefile = gpd.read_file(shapefile_path)
+
+    selected_column = st.selectbox("Wybierz zanieczyszczenie:", excel.columns[5:8], key='map1')
+
+    # Zmienna gdf_merged
+    gdf_merged = None
+
+    # Łączenie danych po kolumnie ISO3_CODE
+    gdf_merged = shapefile.merge(excel, on="ISO3_CODE", how="left")
+
+    # Przekształcenie na wartości float
+    gdf_merged[selected_column] = gdf_merged[selected_column].str.replace(',', '.')
+    gdf_merged[selected_column] = gdf_merged[selected_column].astype(float)
+
+    if gdf_merged is not None:
+        # Wyświetlenie kartogramu
+        fig, ax = plt.subplots()
+        gdf_merged.plot(column=selected_column, cmap='Wistia', legend=True, ax=ax, scheme='quantiles')
+        plt.title('Średnie roczne stężenie ' + selected_column)
+        st.pyplot(fig)
+
+    else:
+        st.write("Brak danych")
+
+# VIF
+
+def calculate_vif(data):
+    # Tworzenie ramki danych
+    X = data.iloc[:, 8:11]
+    X = X.apply(lambda x: x.str.replace(',', '.').astype(float))
+    X = X.dropna().replace([np.inf, -np.inf], np.nan).dropna()
+
+
+    # Dodanie const
+    X = sm.add_constant(X)
+
+    # Tworzenie pustej ramki danych do przechowywania wyników
+    vif_data = pd.DataFrame()
+    vif_data["Zmienna"] = X.columns
+
+    # Obliczenie VIF
+    vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+
+    return vif_data
+
+# Tabela brak wartości
+
+def count_empty_values(data):
+    empty_values_count = data.isnull().sum()
+    empty_values_table = pd.DataFrame({'Kolumna': empty_values_count.index, 'Liczba wierszy': empty_values_count.values})
+    return empty_values_table
+
+
+# Glowna funkcja
+
+def main():
+
+    st.sidebar.title("Pasek nawigacji")
+    page = st.sidebar.selectbox("Wybierz podstronę:", ["Strona główna", "Dane dla regionów WHO", "Dane dla państw", "Dane dla miast", "Mapa"])
+
+    # Wczytanie danych
+    data = load_data()
+    shapefile_path = r'C:\Users\aczad\Desktop\studia\agh studia magisterskie geoinformatyka\Pozostałe\Praktyki uczenia maszynowego\Ćwiczenia\EDA z uwzględnieniem czynnika przestrzennego\swiat_shapefile\swiat.shp'
+    shapefile = gpd.read_file(shapefile_path)
+
+    # Wybór odpowiedniej podstrony
+    if page == "Strona główna":
+        basic_stats(data)
+
+        vif_data = calculate_vif(data)
+        st.write("Wartości VIF")
+        st.write(vif_data)
+
+        empty_values_table = count_empty_values(data)
+        st.write("Liczba wierszy, które nie zawierają danych")
+        st.write(empty_values_table)
+
+    elif page == "Dane dla regionów WHO":
+        plot_WHO_region_1(data)
+        plot_WHO_region_2(data)
+        boxplot_WHO_region(data)
+
+    elif page == "Dane dla państw":
+        plot_countries_1(data)
+        plot_countries_2(data)
+        boxplot_countries(data)
+
+    elif page == "Dane dla miast":
+        plot_cities_1(data)
+        plot_cities_2(data)
+        boxplot_cities(data)
+
+    elif page == "Mapa":
+        map(data, shapefile)
+        map_2(data, shapefile)
+
+
+# Uruchomienie aplikacji
+if __name__ == "__main__":
+    main()
