@@ -404,7 +404,7 @@ def map_2(data, shapefile):
 # Mapa 2
 
 def map(data, shapefile):
-    st.subheader("Średnie roczne stężenie wybranych substancji dla 2019 r.")
+    st.subheader("Średnie roczne stężenie wybranych zanieczyszczeń dla 2019 r.")
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
     excel = pd.read_csv(r'C:\Users\aczad\Desktop\studia\agh studia magisterskie geoinformatyka\Pozostałe\Praktyki uczenia maszynowego\Ćwiczenia\EDA z uwzględnieniem czynnika przestrzennego\dane_mapa2.csv', header=0, sep=';')
