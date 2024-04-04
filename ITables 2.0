@@ -1,0 +1,26 @@
+import numpy as np
+import pandas as pd
+!pip install itables
+import itables as it
+from itables import init_notebook_mode
+
+init_notebook_mode(all_interactive=True, connected=True)
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Wczytanie danych
+def load_data():
+    df = pd.read_csv('/content/drive/MyDrive/dane.csv', header=0, sep=';')
+
+    return df 
+
+def main():
+    # Wczytanie danych
+    df = load_data()  
+
+    it.show(df)
+
+# Uruchomienie 
+if __name__ == "__main__":
+    main()
