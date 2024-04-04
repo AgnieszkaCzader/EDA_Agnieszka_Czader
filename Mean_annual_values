@@ -1,0 +1,47 @@
+import numpy as np
+import pandas as pd
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Wczytanie danych
+def load_data():
+    df = pd.read_csv('/content/drive/MyDrive/dane.csv', header=0, sep=';')
+    df['PM25'] = df['PM25'].str.replace(',', '.')
+    df['PM10'] = df['PM10'].str.replace(',', '.')
+    df['NO2'] = df['NO2'].str.replace(',', '.')
+    # Konwersja danych na liczby
+    df['PM25'] = pd.to_numeric(df['PM25'], errors='coerce')
+    df['PM10'] = pd.to_numeric(df['PM10'], errors='coerce')
+    df['NO2'] = pd.to_numeric(df['NO2'], errors='coerce')
+
+    df['PM25'] = df['PM25'].dropna().astype(int)
+    df['PM10'] = df['PM10'].dropna().astype(int)
+    df['NO2'] = df['NO2'].dropna().astype(int)
+    df.set_index(df.columns[0], inplace=True)
+
+    # Obliczanie średnich wartości
+    df_mean_PM25 = df.groupby(['WHO Country Name', 'Measurement Year'])['PM25'].mean().reset_index()
+    df_mean_PM10 = df.groupby(['WHO Country Name', 'Measurement Year'])['PM10'].mean().reset_index()
+    df_mean_NO2 = df.groupby(['WHO Country Name', 'Measurement Year'])['NO2'].mean().reset_index()
+
+    df_mean_PM25['PM25'] = df_mean_PM25['PM25'].round(2)
+    df_mean_PM10['PM10'] = df_mean_PM10['PM10'].round(2)
+    df_mean_NO2['NO2'] = df_mean_NO2['NO2'].round(2)
+
+    # Dodanie nowych kolumn
+    df = pd.merge(df, df_mean_PM25, how='left', on=['WHO Country Name', 'Measurement Year'], suffixes=('', '_mean'))
+    df = pd.merge(df, df_mean_PM10, how='left', on=['WHO Country Name', 'Measurement Year'], suffixes=('', '_mean'))
+    df = pd.merge(df, df_mean_NO2, how='left', on=['WHO Country Name', 'Measurement Year'], suffixes=('', '_mean'))
+
+    return df
+
+def main():
+    # Wczytanie danych
+    df = load_data()
+    output_excel = "/content/drive/MyDrive/pomiary_excel_analiza_danych/dane2.xlsx"
+    df.to_excel(output_excel, index=False)
+
+# Uruchomienie aplikacji
+if __name__ == "__main__":
+    main()
