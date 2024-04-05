@@ -1,0 +1,91 @@
+﻿WHO Region;WHO Country Name;City or Locality;Measurement Year;ISO3_CODE;PM25_mean;PM10_mean;NO2_mean
+Eastern Mediterranean Region;Afghanistan;Kabul;2019;AFG;119;;
+European Region;Albania;Vlore;2019;ALB;10;;
+European Region;Andorra;Escaldes-Engordany;2019;AND;;24;31
+Eastern Mediterranean Region;United Arab Emirates;Abu Dhabi;2019;ARE;45;103;34,6
+Region of the Americas;Argentina;Buenos Aires;2019;ARG;;25;18
+Western Pacific Region;Australia;Adelaide;2019;AUS;7,08;16,33;9,33
+European Region;Austria;Am Rechen;2019;AUT;10,6;14,96;16,15
+European Region;Belgium;Aarschot;2019;BEL;10,43;18,19;18,23
+South East Asia Region;Bangladesh;Dhaka;2019;BGD;86;;
+European Region;Bulgaria;Blagoevgrad;2019;BGR;16;28,48;17,81
+Eastern Mediterranean Region;Bahrain;Hidd;2019;BHR;42,67;115,67;51
+Region of the Americas;Bahamas;Nassau;2019;BHS;4;4;
+European Region;Bosnia and Herzegovina;Gorazde;2019;BIH;38,33;39,43;20,33
+Region of the Americas;Brazil;Americana;2019;BRA;14,78;25,29;16,47
+Region of the Americas;Canada;Aamjiwnaang;2019;CAN;5,88;13,21;11,06
+European Region;Switzerland;Aadorf;2019;CHE;8,82;12,55;18,86
+Region of the Americas;Chile;Andacollo;2019;CHL;18,51;39,45;16
+Western Pacific Region;China;Aba Zangzu Qiangzu Zizhizhou;2019;CHN;38,01;33,89;
+Region of the Americas;Colombia;Barbosa;2019;COL;16,7;45,67;
+Region of the Americas;Costa Rica;San Jose;2019;CRI;7;;
+European Region;Cyprus;Agia Marina;2019;CYP;12,5;24;14,5
+European Region;Czechia;Belotin;2019;CZE;14,75;18,97;14,25
+European Region;Germany;Aachen;2019;DEU;9,84;15,08;21,21
+European Region;Denmark;Aalborg;2019;DNK;9,8;18,4;10,33
+African Region;Algeria;Algiers;2019;DZA;21;;
+European Region;Spain;A Coruna;2019;ESP;8,47;18,27;13,83
+European Region;Estonia;Kohtla-Jarve;2019;EST;4,25;10,5;5
+African Region;Ethiopia;Addis Ababa;2019;ETH;20;;
+European Region;Finland;Espoo;2019;FIN;4,83;10,88;9,9
+European Region;France;Agde;2019;FRA;8,96;16,53;16,1
+European Region;United Kingdom;Aberdeen;2019;GBR;9,08;15,5;21,17
+European Region;Greece;Ano Liosia;2019;GRC;16,3;28,94;24,17
+Region of the Americas;Guatemala;Guatemala City;2019;GTM;14;;
+European Region;Croatia;Desinic Gora;2019;HRV;13,2;21,7;16,6
+European Region;Hungary;Ajka;2019;HUN;14,43;23;17,38
+South East Asia Region;Indonesia;Jakarta;2019;IDN;46;;
+South East Asia Region;India;Adilabad;2019;IND;39,45;98,47;22,45
+European Region;Ireland;Carlow;2019;IRL;8,38;13,68;16,09
+Eastern Mediterranean Region;Iran (Islamic Republic of);Abadan;2019;IRN;23,5;;86
+Eastern Mediterranean Region;Iraq;Babylon;2019;IRQ;43;;54
+European Region;Iceland;Akureyri;2019;ISL;3,6;9,14;8
+European Region;Italy;Abbadia Cerreto;2019;ITA;13,94;22,1;18,91
+Eastern Mediterranean Region;Jordan;Amman;2019;JOR;26;55;23,25
+European Region;Kazakhstan;Astana;2019;KAZ;21;;
+African Region;Kenya;Mombasa;2019;KEN;10;22;
+European Region;Kyrgyzstan;Bishkek;2019;KGZ;33;;
+Western Pacific Region;Republic of Korea;Busan;2019;KOR;22,71;40,24;31,94
+Eastern Mediterranean Region;Kuwait;Ahmadi Governorate;2019;KWT;40,33;111,5;27,8
+Western Pacific Region;Lao People's Democratic Republic;Vientiane;2019;LAO;25;;
+South East Asia Region;Sri Lanka;Colombo;2019;LKA;23;;
+European Region;Lithuania;Jonava;2019;LTU;12,6;23,2;14
+European Region;Luxembourg;Bourglinster;2019;LUX;7,67;15,25;20,83
+European Region;Latvia;Liepaja;2019;LVA;11;19,6;12,6
+Eastern Mediterranean Region;Morocco;Casablanca;2019;MAR;;29,67;10
+European Region;Monaco;Monaco;2019;MCO;;14;32
+African Region;Madagascar;Antananarivo;2019;MDG;19;74;
+European Region;North Macedonia;Bitola;2019;MKD;;34;19,43
+European Region;Malta;H'attard;2019;MLT;11,5;29,33;14,5
+South East Asia Region;Myanmar;Rangoon;2019;MMR;18;;
+European Region;Montenegro;Niksic;2019;MNE;;;14
+Western Pacific Region;Mongolia;Ulaanbaatar;2019;MNG;60;124;
+African Region;Mauritius;Beau Bassin/Rose Hill;2019;MUS;;24;14
+Western Pacific Region;Malaysia;Johor;2019;MYS;20,44;28,88;12,94
+European Region;Netherlands;Amsterdam;2019;NLD;10,38;17,88;19,1
+European Region;Norway;Alesund;2019;NOR;5,94;13,17;18,94
+South East Asia Region;Nepal;Bhaisipati;2019;NPL;25,64;36,36;
+Eastern Mediterranean Region;Pakistan;Islamabad;2019;PAK;71,25;;22
+Region of the Americas;Peru;Lima;2019;PER;30;;
+European Region;Poland;Bełchatow;2019;POL;18,26;25,86;14,14
+European Region;Portugal;Albufeira;2019;PRT;6,07;16,97;15,77
+Eastern Mediterranean Region;Qatar;Doha;2019;QAT;41;208;42
+European Region;Romania;Alba Iulia;2019;ROU;15,5;22,98;20,75
+Eastern Mediterranean Region;Saudi Arabia;Dharan;2019;SAU;34;;
+African Region;Senegal;Dakar;2019;SEN;;136;16
+Western Pacific Region;Singapore;Singapore;2019;SGP;16;;23
+European Region;Serbia;Belgrade;2019;SRB;;37,12;23,67
+European Region;Slovakia;Banska Bystrica;2019;SVK;15,11;21,81;16,29
+European Region;Slovenia;Celje;2019;SVN;11,75;20,14;18,33
+European Region;Sweden;Älgarås;2019;SWE;4,94;15,4;13,86
+South East Asia Region;Thailand;Bangkok;2019;THA;24,56;43,42;20
+European Region;Tajikistan;Dushanbe;2019;TJK;71;;
+European Region;Turkmenistan;Ashgabat;2019;TKM;22;;
+Region of the Americas;Trinidad and Tobago;Point Lisas;2019;TTO;11,33;28,33;12
+European Region;Turkey;Adana;2019;TUR;21,36;45,38;29,31
+African Region;Uganda;Kampala;2019;UGA;60;;
+European Region;Ukraine;Kyiv;2019;UKR;23;31;
+Region of the Americas;United States of America;Albuquerque (Nm);2019;USA;6,84;18,19;12,42
+European Region;Uzbekistan;Tashkent;2019;UZB;41;;
+Western Pacific Region;Viet Nam;Ha Noi;2019;VNM;39;;
+African Region;South Africa;Bojanala;2019;ZAF;20,67;42,39;18,13
