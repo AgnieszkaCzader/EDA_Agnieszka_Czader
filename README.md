@@ -1,5 +1,5 @@
 
-Celem projektu było wykonanie EDA dla danych dotyczących zanieczyszczenia powietrza, pochodzących z bazy WHO. Cały projekt był wykonywany w Google Colab. Dodatkowo wszystkie wykorzystane kody zostały wgrane do utworzonego repozytorium. 
+Celem projektu było wykonanie EDA dla danych dotyczących zanieczyszczenia powietrza, pochodzących z bazy WHO. Cały projekt był wykonywany w Google Colab. Dodatkowo wszystkie wykorzystane kody zostały wgrane do tego repozytorium. 
 
 Części składowe repozytorium:
 
