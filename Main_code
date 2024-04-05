@@ -248,21 +248,7 @@ def boxplot_countries(data):
     fig.update_layout(title=f"Boxplot dla: {selected_column} i {selected_row}",
                       xaxis_title='', yaxis_title=f"{selected_column} (µg/m3)")
 
-    # Dodanie punktów
-    # Filtrowanie danych
-    swarm_data = filtered_data[[selected_column, unique_columns[5], unique_columns[6], unique_columns[7]]]
-    swarm_data[selected_column] = swarm_data[selected_column].str.replace(',', '.').astype(float)
-    swarm_data = swarm_data.melt(id_vars=unique_columns[5:8], value_vars=[selected_column])
-
-    # Dodanie punktów
-    fig_swarm = px.scatter(swarm_data, x=swarm_data['variable'], y=swarm_data['value'], color=swarm_data['variable'])
-    fig_swarm.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
-
-    # Złączenie
-    for trace in fig_swarm.data:
-        fig.add_trace(trace)
-
-    # Wyświetlenie wykresów
+    # Wyświetlenie
     st.plotly_chart(fig)
 
     boxplot_index += 1
@@ -295,25 +281,10 @@ def boxplot_WHO_region(data):
     fig.update_layout(title=f"Boxplot dla: {selected_column} i {selected_row}",
                       xaxis_title='', yaxis_title=f"{selected_column} (µg/m3)")
 
-    # Dodanie punktów
-    # Filtrowanie danych
-    swarm_data = filtered_data[[selected_column, unique_columns[5], unique_columns[6], unique_columns[7]]]
-    swarm_data[selected_column] = swarm_data[selected_column].str.replace(',', '.').astype(float)
-    swarm_data = swarm_data.melt(id_vars=unique_columns[5:8], value_vars=[selected_column])
-
-    # Dodanie punktów
-    fig_swarm = px.scatter(swarm_data, x=swarm_data['variable'], y=swarm_data['value'], color=swarm_data['variable'])
-    fig_swarm.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
-
-    # Złączenie
-    for trace in fig_swarm.data:
-        fig.add_trace(trace)
-
-    # Wyświetlenie wykresów
+    # Wyświetlenie
     st.plotly_chart(fig)
 
     boxplot_index += 1
-
 
 # Boxplot dla miast
 
@@ -343,21 +314,7 @@ def boxplot_cities(data):
     fig.update_layout(title=f"Boxplot dla: {selected_column} i {selected_row}",
                       xaxis_title='', yaxis_title=f"{selected_column} (µg/m3)")
 
-    # Dodanie punktów
-    # Filtrowanie danych
-    swarm_data = filtered_data[[selected_column, unique_columns[5], unique_columns[6], unique_columns[7]]]
-    swarm_data[selected_column] = swarm_data[selected_column].str.replace(',', '.').astype(float)
-    swarm_data = swarm_data.melt(id_vars=unique_columns[5:8], value_vars=[selected_column])
-
-    # Dodanie punktów
-    fig_swarm = px.scatter(swarm_data, x=swarm_data['variable'], y=swarm_data['value'], color=swarm_data['variable'])
-    fig_swarm.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
-
-    # Złączenie
-    for trace in fig_swarm.data:
-        fig.add_trace(trace)
-
-    # Wyświetlenie wykresów
+    # Wyświetlenie
     st.plotly_chart(fig)
 
     boxplot_index += 1
